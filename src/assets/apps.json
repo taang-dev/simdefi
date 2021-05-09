@@ -1,0 +1,16 @@
+[
+  {
+    "app": "pancake",
+    "appName": "Pancakeswap",
+    "appDesc": "",
+    "gov": "CAKE",
+    "farms": null
+  },
+  {
+    "app": "custom",
+    "appName": "Custom",
+    "appDesc": "",
+    "gov": "",
+    "farms": null
+  }
+]

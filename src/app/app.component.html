@@ -1,0 +1,381 @@
+<!-- Template -->
+
+<ng-template #labelvalue let-type let-totalAmount="amount" let-icon="hasIcon">
+  <div class="ct-pcs-content-labelvalue">
+      <div class="ct-pcs-content-labelvalue-type">{{ type }}:</div>
+      <div></div>
+      <div class="ct-pcs-content-labelvalue-amount">
+        <span *ngIf="icon">
+          <ng-container *ngTemplateOutlet="svg_17">
+          </ng-container>
+        </span>
+        <span>{{ totalAmount }}%</span>
+      </div>
+  </div>
+</ng-template>
+
+<ng-template #svg_17>
+  <svg viewBox="0 0 24 24" color="textSubtle" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z"></path><path d="M11.25 7.72H6.25V9.22H11.25V7.72Z"></path><path d="M18 15.75H13V17.25H18V15.75Z"></path><path d="M18 13.25H13V14.75H18V13.25Z"></path><path d="M8 18H9.5V16H11.5V14.5H9.5V12.5H8V14.5H6V16H8V18Z"></path><path d="M14.09 10.95L15.5 9.54L16.91 10.95L17.97 9.89L16.56 8.47L17.97 7.06L16.91 6L15.5 7.41L14.09 6L13.03 7.06L14.44 8.47L13.03 9.89L14.09 10.95Z"></path></svg>
+</ng-template>
+<ng-template #svg_18>
+  <svg viewBox="0 0 24 24" width="18px" color="secondary" xmlns="http://www.w3.org/2000/svg" class="ct-pcs-svg-refresh"><path d="M17.65 6.35C16.02 4.72 13.71 3.78 11.17 4.04C7.50002 4.41 4.48002 7.39 4.07002 11.06C3.52002 15.91 7.27002 20 12 20C15.19 20 17.93 18.13 19.21 15.44C19.53 14.77 19.05 14 18.31 14C17.94 14 17.59 14.2 17.43 14.53C16.3 16.96 13.59 18.5 10.63 17.84C8.41002 17.35 6.62002 15.54 6.15002 13.32C5.31002 9.44 8.26002 6 12 6C13.66 6 15.14 6.69 16.22 7.78L14.71 9.29C14.08 9.92 14.52 11 15.41 11H19C19.55 11 20 10.55 20 10V6.41C20 5.52 18.92 5.07 18.29 5.7L17.65 6.35Z"></path></svg>
+</ng-template>
+<ng-template #svg_19>
+  <svg viewBox="0 0 24 24" width="20px" height="20px" color="textSubtle" xmlns="http://www.w3.org/2000/svg" class="ct-pcs-svg-description"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM11 16H13V18H11V16ZM12.61 6.04C10.55 5.74 8.73 7.01 8.18 8.83C8 9.41 8.44 10 9.05 10H9.25C9.66 10 9.99 9.71 10.13 9.33C10.45 8.44 11.4 7.83 12.43 8.05C13.38 8.25 14.08 9.18 14 10.15C13.9 11.49 12.38 11.78 11.55 13.03C11.55 13.04 11.54 13.04 11.54 13.05C11.53 13.07 11.52 13.08 11.51 13.1C11.42 13.25 11.33 13.42 11.26 13.6C11.25 13.63 11.23 13.65 11.22 13.68C11.21 13.7 11.21 13.72 11.2 13.75C11.08 14.09 11 14.5 11 15H13C13 14.58 13.11 14.23 13.28 13.93C13.3 13.9 13.31 13.87 13.33 13.84C13.41 13.7 13.51 13.57 13.61 13.45C13.62 13.44 13.63 13.42 13.64 13.41C13.74 13.29 13.85 13.18 13.97 13.07C14.93 12.16 16.23 11.42 15.96 9.51C15.72 7.77 14.35 6.3 12.61 6.04Z"></path></svg>
+</ng-template>
+
+
+<ng-template #detail 
+  let-keyword 
+  let-subKeyword="subKeyword" 
+  let-total="total"
+  let-subTotal="subTotal"
+>
+  <div class="ct-pcs-content-detail">
+      <div>
+        <span class="ct-pcs-content-detail-keyword">{{ keyword }}</span>
+        <span class="ct-pcs-content-detail-subkeyword" *ngIf="subKeyword">&nbsp;{{ subKeyword }}</span>
+      </div>
+      <div class="ct-pcs-content-detail-total">{{ total }}</div>
+      <div class="ct-pcs-content-detail-subtotal" *ngIf="subTotal">~{{ subTotal }}</div>
+  </div>
+</ng-template>
+
+<ng-template #modalHeader>
+  <span><i nz-icon nzType="edit" nzTheme="outline"></i> MODE</span>
+</ng-template>
+
+<ng-template #modalContent>
+  <form nz-form [formGroup]="vForm" (ngSubmit)="handleSave()">
+
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired [nzTooltipTitle]="appTooltipTp" >App Name</nz-form-label>
+
+      <ng-template #appTooltipTp>
+        <p class="ct-font-sm">
+          <span>เลือกAppที่คุณต้องการคำนวนผลตอบแทน</span><br>
+          <span>หรือหากไม่มีที่คุณต้องการ ให้เลือก custom</span>
+        </p>
+      </ng-template>
+
+      <nz-form-control [nzSpan]="12" nzValidatingTip="..." [nzErrorTip]="">
+        <nz-select formControlName="app" nzPlaceHolder="Select Farm or Pool">
+          <nz-option *ngFor="let app of appList" [nzValue]="app.app" [nzLabel]="app.appName"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>Farm(or Pool)</nz-form-label>
+      <nz-form-control [nzSpan]="12" [nzErrorTip]="">
+        <input  *ngIf="vForm.get('app').value == 'custom'" nz-input type="text" formControlName="farm" placeholder="Name" />
+        <nz-select *ngIf="vForm.get('app').value !== 'custom'" nzShowSearch formControlName="farm" nzPlaceHolder="Select Farm or Pool">
+          <ng-container *ngFor="let farm of farms;let i=index" >
+            <nz-option nzCustomContent [nzValue]="farm.key" [nzLabel]="farm.farmName">
+              <div>{{ farm.farmName }}</div>
+              <div>yyy</div>
+              <div>zzz</div>
+            </nz-option>
+          </ng-container>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-divider nzDashed [nzText]="divStakingTp">
+      <ng-template #divStakingTp><i nz-icon nzType="right-circle" nzTheme="outline"></i> STAKING</ng-template>
+    </nz-divider>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>Token</nz-form-label>
+      <nz-form-control [nzSpan]="12" [nzErrorTip]="">
+        <input nz-input type="text" formControlName="stakingToken" placeholder="" style="width: 150px;text-transform:uppercase" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>Amount</nz-form-label>
+      <nz-form-control [nzSpan]="12" [nzErrorTip]="">
+          <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
+          formControlName="stakingAmount"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>Staking Time</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="">
+        <div class="ct-flex">
+          <nz-input-number [nzMin]="1" [nzStep]="1" [nzPrecision]="0" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
+          [nzMax]="maxStakeTime" formControlName="stakingTime"></nz-input-number>
+          <div class="ct-after-input-box">{{ vForm.get('stakingTerm').value }}</div>
+          <!-- <nz-radio-group formControlName="stakingTerm" nzButtonStyle="solid" nzSize="small" >
+            <label nz-radio-button [nzValue]="'days'" class="ct-font-sm" [nzDisabled]="false">Days</label>
+            <label nz-radio-button [nzValue]="'months'" class="ct-font-sm">Months</label>
+            <label nz-radio-button [nzValue]="'years'" class="ct-font-sm">Years</label>
+          </nz-radio-group> -->
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>Interest Rate</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="">
+        <div>
+          <div class="ct-flex">
+            <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="2" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
+            [nzMax]="maxInterestRate" formControlName="interestRate"></nz-input-number>
+            <div class="ct-after-input-box">{{ vForm.get('interestType').value }} %</div>
+          </div>
+          <nz-radio-group *ngIf="vForm.get('app').value == 'custom'" formControlName="interestType" nzButtonStyle="solid" nzSize="small" >
+            <label nz-radio-button [nzValue]="'apy'" class="ct-font-sm" [nzDisabled]="false">APY</label>
+            <label nz-radio-button [nzValue]="'apr'" class="ct-font-sm" [nzDisabled]="false">APR</label>
+          </nz-radio-group>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <nz-form-item *ngIf="vForm.get('interestType').value !== 'apy'">
+      <nz-form-label [nzSpan]="8">Compound</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="">
+        <nz-switch formControlName="compound"></nz-switch>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item *ngIf="vForm.get('interestType').value == 'apy' || vForm.get('compound').value">
+      <nz-form-label [nzSpan]="8" nzRequired>Compound Frequency</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="">
+        <div class="ct-flex">
+          <nz-input-number [nzMin]="1" [nzStep]="1" [nzPrecision]="0" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
+          [nzMax]="maxCompoundFrequency" formControlName="compoundFrequency"></nz-input-number>
+          <div class="ct-after-input-box">per {{ vForm.get('stakingTerm').value }}</div>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-divider nzDashed [nzText]="divEarningTp">
+      <ng-template #divEarningTp><i nz-icon nzType="left-circle" nzTheme="outline"></i> EARNING</ng-template>
+    </nz-divider>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>Token</nz-form-label>
+      <nz-form-control [nzSpan]="12" [nzErrorTip]="">
+        <input nz-input type="text" formControlName="earningToken" placeholder="" style="width: 150px;text-transform:uppercase" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <ng-container *ngIf="vForm.get('stakingToken').value && vForm.get('earningToken').value">
+
+      <nz-divider nzDashed [nzText]="divOptionalTp">
+        <ng-template #divOptionalTp><i nz-icon nzType="plus" nzTheme="outline"></i> OPTIONAL</ng-template>
+      </nz-divider>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8">
+          <span class="ct-uppercase">{{ vForm.get('stakingToken').value }}</span>&nbsp;Price
+        </nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <div class="ct-flex">
+            <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
+            formControlName="stakingTokenPrice"></nz-input-number>
+            <div class="ct-after-input-box">USD</div>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item *ngIf="vForm.get('stakingToken').value !== vForm.get('earningToken').value">
+        <nz-form-label [nzSpan]="8">
+          <span class="ct-uppercase">{{ vForm.get('earningToken').value }}</span>&nbsp;Price
+        </nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <div class="ct-flex">
+            <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
+            formControlName="earningTokenPrice"></nz-input-number>
+            <div class="ct-after-input-box">USD</div>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+    </ng-container>
+
+  </form>
+</ng-template>
+
+<ng-template #modalFooter>
+  <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+  <button nz-button nzType="primary" (click)="handleSave()">Save</button>
+</ng-template>
+
+<ng-template #devTimeline>
+  <nz-timeline>
+    <nz-timeline-item nzColor="green">Create a services site 2015-09-01</nz-timeline-item>
+    <nz-timeline-item nzColor="green">Solve initial network problems 2015-09-01</nz-timeline-item>
+    <nz-timeline-item nzColor="red">
+      <p>Solve initial network problems 1</p>
+      <p>Solve initial network problems 2</p>
+      <p>Solve initial network problems 3 2015-09-01</p>
+    </nz-timeline-item>
+    <nz-timeline-item>
+      <p>Technical testing 1</p>
+      <p>Technical testing 2</p>
+      <p>Technical testing 3 2015-09-01</p>
+    </nz-timeline-item>
+    <nz-timeline-item nzColor="gray">
+      <p>Technical testing 1</p>
+      <p>Technical testing 2</p>
+      <p>Technical testing 3 2015-09-01</p>
+    </nz-timeline-item>
+    <nz-timeline-item nzColor="gray">
+      <p>Technical testing 1</p>
+      <p>Technical testing 2</p>
+      <p>Technical testing 3 2015-09-01</p>
+    </nz-timeline-item>
+  </nz-timeline>
+
+</ng-template>
+
+<nz-drawer [nzClosable]="false" [nzVisible]="screenControl.openMenu" nzPlacement="right" nzTitle="TAANG.DEV" (nzOnClose)="closeDrawer()">
+  <ng-container *nzDrawerContent>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+  </ng-container>
+</nz-drawer>
+      
+
+
+<!-- End Template -->
+
+
+
+<nz-layout style="min-height: 100vh;">
+  <nz-header style="display: flex;justify-content: space-between;">
+    <div class="logo"></div>
+    <div class="ct-flex" (click)="openDrawer()"><i nz-icon nzType="menu-fold" nzTheme="outline" class="ct-icon-menu"></i></div>
+  </nz-header>
+
+
+
+  
+  <nz-content>
+
+      <!-- Ads carousel -->
+      <!-- <nz-carousel nzAutoPlay>
+  <div nz-carousel-content *ngFor="let index of [1,2,3,4]">
+    <h3>{{ index }}</h3>
+  </div>
+</nz-carousel> -->
+  
+    <!--<nz-breadcrumb>
+      
+      <nz-breadcrumb-item>Home</nz-breadcrumb-item>
+      <nz-breadcrumb-item>List</nz-breadcrumb-item>
+      <nz-breadcrumb-item>App</nz-breadcrumb-item>
+      
+    </nz-breadcrumb>-->
+
+    <div class="content">
+      <div class="sub-content" nz-row>
+        
+
+        <!-- Config -->
+
+        <div
+          class="inner-content"
+          nz-col
+          nzXs="2"
+          nzSm="4"
+          nzMd="6"
+          nzLg="8"
+          nzXl="10"
+        >
+          <div class="ct-pcs-card">
+
+            <div class="ct-pcs-header">
+              <div class="ct-pcs-header-content">
+                <div class="ct-pcs-header-content-main">Header</div>
+                <div class="ct-pcs-header-content-sub">Sub-Header</div>
+              </div>
+              <div class="ct-pcs-header-icon">
+                <img *ngIf="currentInfo?.farmInfo?.imgLink" src="https://pancakeswap.finance/images/pools/cake-cake.svg" alt="CAKE"/>
+                <nz-avatar-group *ngIf="!(currentInfo?.farmInfo?.imgLink)">
+                  <nz-avatar [nzSize]="'large'" class="ct-uppercase" style="background-color: #1fc7d4" nz-tooltip nzText="safemoon"></nz-avatar>
+                  <nz-avatar [nzSize]="'large'" class="ct-uppercase" style="background-color: #ed4b9e" nz-tooltip nzText="CAKE"></nz-avatar>
+                </nz-avatar-group>
+              </div>
+            </div>
+
+            <div class="ct-pcs-content">
+              <ng-container *ngTemplateOutlet="labelvalue;context:{ $implicit: 'APR', amount: '8888888.88', hasIcon: true }">
+              </ng-container>
+
+              <div class="ct-mt-lg">
+                <ng-container *ngTemplateOutlet="detail;context:{ $implicit: 'CAKE', subKeyword: 'EARN', total: '9999999.99', subTotal: 'xxxxxxxxx' }">
+                </ng-container>
+              </div>
+
+              <div class="ct-mt-lg">
+                <ng-container *ngTemplateOutlet="detail;context:{ $implicit: 'CAKE', subKeyword: 'EARN', total: '9999999.99', subTotal: 'xxxxxxxxx' }">
+                </ng-container>
+              </div>
+              
+            </div>
+
+            <div class="ct-pcs-footer">
+              <div class="ct-pcs-footer-left">
+                <div class="ct-pcs-compound-type-info">
+                  <ng-container *ngTemplateOutlet="svg_18">
+                  </ng-container>
+                  <span>Manual</span>
+                </div>
+                &nbsp;
+                <div class="ct-m-xs">
+                  <ng-container *ngTemplateOutlet="svg_19">
+                  </ng-container>
+                </div>
+              </div>
+              <div class="ct-pcs-footer-right">
+                <!-- <button class="ct-bg-green ct-pcs-button" (click)="handleEdit(modalHeader, modalContent, modalFooter);" >{{ i18n?.edit || 'Edit' }}</button> -->
+              </div>
+            </div>
+
+          </div>
+
+        
+          <div
+            class="ct-w-100 ct-p-md"
+            nz-row
+            nz-space
+            nzJustify="center"
+            nzAlign="center"
+            [nzSize]="8"
+          >
+            <button nz-col *nzSpaceItem class="ct-bg-green ct-pcs-button ct-font-md" (click)="handleEdit(modalHeader, modalContent, modalFooter);">
+              {{ i18n?.edit || 'Edit' }}
+            </button>
+            <button nz-col *nzSpaceItem class="ct-bg-red ct-pcs-button ct-font-md" (click)="handleSaveAndShare()">
+              Save & Share
+            </button>
+            <!-- <button nz-col *nzSpaceItem class="ct-bg-green ct-pcs-button">
+              Collect
+            </button> -->
+          </div>
+        </div>
+
+
+
+        <!-- End Config -->
+
+        <!-- Result -->
+
+
+        <!-- Result -->
+    
+      </div>
+    </div>
+  </nz-content>
+  <nz-footer class="ct-footer">
+    <div class="ct-footer-main">xxxxxx<br>yyyy<br><br>zzzzz</div>
+    <div class="ct-footer-sub">Defi Simulator©2021 By taang.dev</div>
+  </nz-footer>
+</nz-layout>

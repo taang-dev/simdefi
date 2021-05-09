@@ -1,0 +1,58 @@
+[  
+  {
+    "app": "custom",
+    "key": null,
+    "farmName": null,
+    "farmType": null,
+    "farmDesc": null,
+    "stake": null,
+    "earn": null,
+    "interestRate": null,
+    "interestType": "apr",
+    "compound": false,
+    "remark": null,
+    "imgLink": ""
+  },
+  {
+    "app": "pancake",
+    "key": "pancake_auto_cake",
+    "farmName": "Auto Cake",
+    "farmType": "pool",
+    "farmDesc": "",
+    "stake": "CAKE",
+    "earn": "CAKE",
+    "interestRate": null,
+    "interestType": "apy",
+    "compound": false,
+    "remark": null,
+    "imgLink": ""
+  },
+  {
+    "app": "pancake",
+    "key": "pancake_manual_cake",
+    "farmName": "Manual Cake",
+    "farmType": "pool",
+    "farmDesc": "",
+    "stake": "CAKE",
+    "earn": "CAKE",
+    "interestRate": null,
+    "interestType": "apr",
+    "compound": false,
+    "remark": null,
+    "imgLink": ""
+  },
+  {
+    "app": "pancake",
+    "key": "pancake_bunny",
+    "farmName": "Bunny",
+    "farmType": "",
+    "farmDesc": "",
+    "stake": "CAKE",
+    "earn": "BUNNY",
+    "interestRate": null,
+    "interestType": "apr",
+    "compound": false,
+    "remark": null,
+    "imgLink": ""
+  }
+]
