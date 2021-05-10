@@ -42,7 +42,7 @@
 </ng-template>
 
 <ng-template #modalHeader>
-  <span><i nz-icon nzType="edit" nzTheme="outline"></i> MODE</span>
+  <span><i nz-icon nzType="edit" nzTheme="twotone"></i> MODE</span>
 </ng-template>
 
 <ng-template #modalContent>
@@ -74,8 +74,6 @@
           <ng-container *ngFor="let farm of farms;let i=index" >
             <nz-option nzCustomContent [nzValue]="farm.key" [nzLabel]="farm.farmName">
               <div>{{ farm.farmName }}</div>
-              <div>yyy</div>
-              <div>zzz</div>
             </nz-option>
           </ng-container>
         </nz-select>
@@ -83,7 +81,7 @@
     </nz-form-item>
 
     <nz-divider nzDashed [nzText]="divStakingTp">
-      <ng-template #divStakingTp><i nz-icon nzType="right-circle" nzTheme="outline"></i> STAKING</ng-template>
+      <ng-template #divStakingTp><i nz-icon nzType="wallet" nzTheme="twotone"></i> STAKING</ng-template>
     </nz-divider>
 
     <nz-form-item>
@@ -154,7 +152,7 @@
     </nz-form-item>
 
     <nz-divider nzDashed [nzText]="divEarningTp">
-      <ng-template #divEarningTp><i nz-icon nzType="left-circle" nzTheme="outline"></i> EARNING</ng-template>
+      <ng-template #divEarningTp><i nz-icon nzType="dollar" nzTheme="twotone"></i> EARNING</ng-template>
     </nz-divider>
 
     <nz-form-item>
@@ -167,7 +165,7 @@
     <ng-container *ngIf="vForm.get('stakingToken').value && vForm.get('earningToken').value">
 
       <nz-divider nzDashed [nzText]="divOptionalTp">
-        <ng-template #divOptionalTp><i nz-icon nzType="plus" nzTheme="outline"></i> OPTIONAL</ng-template>
+        <ng-template #divOptionalTp><i nz-icon nzType="plus-circle" nzTheme="twotone"></i> OPTIONAL</ng-template>
       </nz-divider>
 
       <nz-form-item>
@@ -241,6 +239,24 @@
     <p>Some contents...</p>
   </ng-container>
 </nz-drawer>
+
+<!-- <ng-template #topWarning>
+  Message Here ...
+</ng-template> -->
+
+<nz-modal [(nzVisible)]="isVisibleTopWarning" 
+  [nzClosable]="false"
+  nzOkText="{{ 'รับทราบ' }}"
+  [nzCancelText]="null"
+  [nzTitle]="null"
+  (nzOnOk)="handleTopWarning()"
+>
+  <div><i nz-icon nzType="warning" nzTheme="twotone" [nzTwotoneColor]="'#e6b600'" ></i> ข้อควรระวังก่อนใช้งาน</div><br>
+  <ul>
+    <li>ทางเว็บไม่มีนโยบายในการขอ private key หรือ seed ถ้าพบว่าต้องกรอกข้อมูลดังกล่าว เป็นไปได้ว่าท่านกำลังอยู่ที่เว็บไซต์ปลอม กรุณาออกจากเว็บเพื่อป้องกันหลอกขโมยข้อมูล</li>
+    <li>ระบบนี้ไม่ใช่การแนะนำการลงทุน เป็นเพียงการจำลองผลลัพธ์เบื้องต้นเท่านั้น ซึ่งสถานการจริงตัวเลขอาจมีการเปลี่ยนแปลงตามเงื่อนไขและสภาพตลาด ขอสงวนสิทธิ์ความรับผิดชอบจากความเสียหายที่เกิดจากการนำไปใช้งานจริง</li>
+  </ul>
+</nz-modal>
       
 
 
@@ -250,8 +266,8 @@
 
 <nz-layout style="min-height: 100vh;">
   <nz-header style="display: flex;justify-content: space-between;">
-    <div class="logo"></div>
-    <div class="ct-flex" (click)="openDrawer()"><i nz-icon nzType="menu-fold" nzTheme="outline" class="ct-icon-menu"></i></div>
+    <div class="logo"><img src="../assets/img/defi-farm-tips-simulator.png"/></div>
+    <!-- <div class="ct-flex" (click)="openDrawer()"><i nz-icon nzType="menu-fold" nzTheme="outline" class="ct-icon-menu"></i></div> -->
   </nz-header>
 
 
@@ -276,8 +292,15 @@
 
     <div class="content">
       <div class="sub-content" nz-row>
-        
 
+        <!-- <nz-alert style="margin-bottom: 20px;"
+          nzType="warning"
+          nzCloseable
+          nzShowIcon
+          nzMessage="โปรดอ่านคำเตือนก่อนใช้งาน"
+          [nzDescription]="topWarning"
+        >
+        </nz-alert> -->
         <!-- Config -->
 
         <div
@@ -374,8 +397,49 @@
       </div>
     </div>
   </nz-content>
-  <nz-footer class="ct-footer">
-    <div class="ct-footer-main">xxxxxx<br>yyyy<br><br>zzzzz</div>
-    <div class="ct-footer-sub">Defi Simulator©2021 By taang.dev</div>
+  <nz-footer class="ct-footer" >
+    <div nz-row class="ct-footer-main">
+      <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+        <nz-divider nzDashed [nzText]="ftSocialTp" class="ct-fttp-section">
+          <ng-template #ftSocialTp><i nz-icon nzType="like" nzTheme="outline"></i> Social</ng-template>
+        </nz-divider>
+        <i class="ct-fas fab fa-facebook-square"></i> แนะนำบทความ เครื่องมือ รีวิวfarm pool เทคนิคการทำ Yield Farming
+        <div>
+          <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fdefifarmtips%2F&tabs&width=270&height=70&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=true&appId" width="270" height="70" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        </div>
+        <br>
+        พูดคุยแลกเปลี่ยนข่าวสารDEFI การทำฟาร์มต่างๆ<br>
+        กลุ่ม DEFI Farm Tips<br>
+        <i class="ct-fas fab fa-line"></i> Line open chat: <a href="https://line.me/ti/g2/y0J5cY_F14ZI_3Pl8p7QNQ">https://line.me/ti/g2/y0J5cY_F14ZI_3Pl8p7QNQ</a><br><br>
+        
+        พูดคุยแลกสอบถามการทำฟาร์มบน Pancakeswap และ Pancakebunny<br>
+        🥞🐰กลุ่ม Pancakeswap & Bunny Thailand<br>
+        <i class="ct-fas fab fa-telegram"></i> Telegram : <a href="https://t.me/pcsbunnythailand">https://t.me/pcsbunnythailand</a><br>
+        <i class="ct-fas fab fa-facebook-square"></i> Facebook: <a href="https://www.facebook.com/groups/190215806253798/">https://www.facebook.com/groups/190215806253798/</a><br>
+      </div>
+      <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+        <nz-divider nzDashed [nzText]="ftNotificationTp" class="ct-fttp-section">
+          <ng-template #ftNotificationTp><i nz-icon nzType="notification" nzTheme="outline"></i> Notification</ng-template>
+        </nz-divider>
+        <ul>
+          <li>ทางเว็บไม่มีนโยบายในการขอ private key หรือ seed ถ้าพบว่าต้องกรอกข้อมูลดังกล่าว เป็นไปได้ว่าท่านกำลังอยู่ที่เว็บไซต์ปลอม กรุณาออกจากเว็บเพื่อป้องกันหลอกขโมยข้อมูล</li>
+          <li>ระบบนี้ไม่ใช่การแนะนำการลงทุน เป็นเพียงการจำลองผลลัพธ์เบื้องต้นเท่านั้น ซึ่งสถานการจริงตัวเลขอาจมีการเปลี่ยนแปลงตามเงื่อนไขและสภาพตลาด ขอสงวนสิทธิ์ความรับผิดชอบจากความเสียหายที่เกิดจากการนำไปใช้งานจริง</li>
+        </ul>
+        <nz-divider nzDashed [nzText]="ftContactTp" class="ct-fttp-section">
+          <ng-template #ftContactTp><i nz-icon nzType="mail" nzTheme="outline"></i> Contact</ng-template>
+        </nz-divider>
+        <p>
+          ต้องการพูดคุยสอบถาม แนะนำติชม หรือสนับสนุนนักพัฒนา สามารถติดต่อได้ที่  
+          <span><i class="ct-fas fas fa-envelope-square"></i><a href="mailto:admin@taang.dev"> admin@taang.dev</a></span>
+        </p>
+        <nz-divider nzDashed [nzText]="ftVersionTp" class="ct-fttp-section">
+          <ng-template #ftVersionTp><i nz-icon nzType="build" nzTheme="outline"></i> Version</ng-template>
+        </nz-divider>
+        <p>
+          version 1.0.0 11/05/2021
+        </p>
+      </div>
+    </div>
+    <div class="ct-footer-sub">Defi Farm Tips Simulator©2021 By taang.dev</div>
   </nz-footer>
 </nz-layout>

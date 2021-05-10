@@ -169,11 +169,16 @@ import farms from '../assets/farms.json';
 
 
       .logo {
-        width: 120px;
+        /* width: 120px;
         height: 31px;
         background: rgba(255, 255, 255, 0.2);
         margin: 16px 24px 16px 0;
-        float: left;
+        float: left; */
+        padding: 10px;
+      }
+
+      .logo img {
+        width: 100px;
       }
 
       [nz-menu] {
@@ -199,7 +204,7 @@ import farms from '../assets/farms.json';
 
       .content {
         width: 100%;
-        padding: 20px 5px;
+        padding: 40px 5px 50px 5px;
       }
             
       .sub-content {
@@ -278,15 +283,31 @@ import farms from '../assets/farms.json';
       }
 
       .ct-footer-main {
+        word-break: break-word;
+        text-align: left;
         background-color: #001529;
         color: #a5a5a5;
+        padding: 30px 0;
+        font-size: 13px;
+      }
+
+      .ct-footer-main div{
         padding: 20px;
+        line-height: 1.8;
       }
 
       .ct-footer-sub {
         background-color: black;
         color: #a5a5a5;
         padding: 20px;
+      }
+
+      .ct-fas {
+        font-size: 15px
+      }
+
+      .ct-fttp-section {
+        color: gray;
       }
   `
   ]
@@ -302,6 +323,7 @@ export class NzDemoLayoutTopComponent {
     openMenu: false,
   }
   currentInfo:any = {}
+  isVisibleTopWarning = true
 
   //Control param
   maxStakeTime: number = 365 * 10
@@ -566,9 +588,9 @@ export class NzDemoLayoutTopComponent {
 
   handleSaveAndShare(): void {
     this.notification.create(
-      'info',
-      'Sorry, This feature not avalible',
-      'Please see the roadmap <a href="https://taang.dev">taang.dev</a>'
+      "info",
+      "Sorry, this feature isn't available right now",
+      'We\'ll inform you later in <a target="_blank" href="https://www.facebook.com/defifarmtips/"><i class="ct-fas fab fa-facebook-square"></i> Defi Farm Tips Official Pages</a>'
     );
   }
 
@@ -578,6 +600,10 @@ export class NzDemoLayoutTopComponent {
 
   closeDrawer() {
     this.screenControl.openMenu = false
+  }
+
+  handleTopWarning(): void {
+    this.isVisibleTopWarning = false
   }
 
 }
