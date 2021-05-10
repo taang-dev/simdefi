@@ -1,5 +1,6 @@
 import { Component, TemplateRef, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from "ng-zorro-antd/notification";
@@ -334,12 +335,17 @@ export class NzDemoLayoutTopComponent {
   maxStakingTokenPrice: number = 9999999999.99999999
   maxEarninAmount: number = 9999999999.99999999
   maxEarningTokenPrice: number = 9999999999.99999999
-
-
+    
   constructor(private modal: NzModalService, 
     private fb: FormBuilder, 
     private notification: NzNotificationService,
-    private message: NzMessageService,) {
+    private message: NzMessageService,
+    private route: ActivatedRoute,) {
+
+    this.route.queryParams.subscribe(params => {
+      console.log(params['l'])
+    });
+
     this.vForm = this.fb.group({
       app: [null, [Validators.required]],
       appInfo: [null],
