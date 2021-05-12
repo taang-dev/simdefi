@@ -2,14 +2,14 @@
 
 <ng-template #labelvalue let-type let-totalAmount="amount" let-icon="hasIcon">
   <div class="ct-pcs-content-labelvalue">
-      <div class="ct-pcs-content-labelvalue-type">{{ type }}:</div>
+      <div class="ct-pcs-content-labelvalue-type ct-uppercase">{{ type }}:</div>
       <div></div>
       <div class="ct-pcs-content-labelvalue-amount">
         <span *ngIf="icon">
           <ng-container *ngTemplateOutlet="svg_17">
           </ng-container>
         </span>
-        <span>{{ totalAmount }}%</span>
+        <span>{{ (totalAmount || 0) | number: '0.0-2' }}%</span>
       </div>
   </div>
 </ng-template>
@@ -25,7 +25,25 @@
 </ng-template>
 
 
-<ng-template #detail 
+<ng-template #detailEarn
+  let-keyword 
+  let-beforeKeyword="beforeKeyword"
+  let-subKeyword="subKeyword" 
+  let-total="total"
+  let-subTotal="subTotal"
+>
+  <div class="ct-pcs-content-detail">
+      <div>
+        <span class="ct-pcs-content-detail-keyword">{{ keyword | uppercase }}</span>
+        <span class="ct-pcs-content-detail-subkeyword" *ngIf="subKeyword">&nbsp;{{ subKeyword }}</span>
+        <span *ngIf="beforeKeyword" class="ct-pcs-content-detail-keyword">&nbsp;({{ beforeKeyword }} {{'days'}})</span>
+      </div>
+      <div class="ct-pcs-content-detail-total">{{ (total || 0) | number:'0.1-8' }}</div>
+      <div class="ct-pcs-content-detail-subtotal" *ngIf="subTotal">~{{ (subTotal*total || 0) | number:'0.2-2' }} {{ 'USD' }}</div>
+  </div>
+</ng-template>
+
+<ng-template #detailStake
   let-keyword 
   let-subKeyword="subKeyword" 
   let-total="total"
@@ -33,16 +51,16 @@
 >
   <div class="ct-pcs-content-detail">
       <div>
-        <span class="ct-pcs-content-detail-keyword">{{ keyword }}</span>
-        <span class="ct-pcs-content-detail-subkeyword" *ngIf="subKeyword">&nbsp;{{ subKeyword }}</span>
+        <span class="ct-pcs-content-detail-subkeyword" *ngIf="subKeyword">{{ subKeyword }}</span>
+        <span class="ct-pcs-content-detail-keyword">&nbsp;{{ keyword | uppercase }}</span>
       </div>
-      <div class="ct-pcs-content-detail-total">{{ total }}</div>
-      <div class="ct-pcs-content-detail-subtotal" *ngIf="subTotal">~{{ subTotal }}</div>
+      <div class="ct-pcs-content-detail-total">{{ (total || 0) | number:'0.1-8' }}</div>
+      <div class="ct-pcs-content-detail-subtotal" *ngIf="subTotal">~{{ (subTotal*total || 0) | number:'0.2-2' }} {{ 'USD' }}</div>
   </div>
 </ng-template>
 
 <ng-template #modalHeader>
-  <span><i nz-icon nzType="edit" nzTheme="twotone"></i> MODE</span>
+  <span><i nz-icon nzType="edit" nzTheme="twotone"></i> {{ i18n?.edit || 'ระบุข้อมูลเพิ่อคำนวน' || 'EDIT' }}</span>
 </ng-template>
 
 <ng-template #modalContent>
@@ -59,17 +77,17 @@
         </p>
       </ng-template>
 
-      <nz-form-control [nzSpan]="12" nzValidatingTip="..." [nzErrorTip]="">
-        <nz-select formControlName="app" nzPlaceHolder="Select Farm or Pool">
+      <nz-form-control [nzSpan]="12" nzValidatingTip="..." [nzErrorTip]="" nzExtra="{{ i18n?.edit || 'หากไม่มีแอปที่ต้องการกรุณาเลือก Custom' || '' }}">
+        <nz-select formControlName="app" nzPlaceHolder="{{ i18n?.edit || '' }}">
           <nz-option *ngFor="let app of appList" [nzValue]="app.app" [nzLabel]="app.appName"></nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
 
     <nz-form-item>
-      <nz-form-label [nzSpan]="8" nzRequired>Farm(or Pool)</nz-form-label>
-      <nz-form-control [nzSpan]="12" [nzErrorTip]="">
-        <input  *ngIf="vForm.get('app').value == 'custom'" nz-input type="text" formControlName="farm" placeholder="Name" />
+      <nz-form-label [nzSpan]="8" >Farm(or Pool)</nz-form-label>
+      <nz-form-control [nzSpan]="12" [nzErrorTip]="" nzExtra="{{ vForm.get('app').value == 'custom' ? (i18n?.edit || 'หากไม่ทราบสามารถตั้งชื่อเองหรือข้ามส่วนนี้ได้' || ''): (i18n?.edit || 'เลือกFarmหรือPoolที่ต้องการฝากเหรียญ' || '') }}">
+        <input  *ngIf="vForm.get('app').value == 'custom'" nz-input type="text" formControlName="farm" placeholder="{{ i18n?.edit || 'ระบุชื่อ Farm หรือ Pool' || 'Please input farm or pool name (if any)' }}" />
         <nz-select *ngIf="vForm.get('app').value !== 'custom'" nzShowSearch formControlName="farm" nzPlaceHolder="Select Farm or Pool">
           <ng-container *ngFor="let farm of farms;let i=index" >
             <nz-option nzCustomContent [nzValue]="farm.key" [nzLabel]="farm.farmName">
@@ -87,15 +105,16 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="8" nzRequired>Token</nz-form-label>
       <nz-form-control [nzSpan]="12" [nzErrorTip]="">
-        <input nz-input type="text" formControlName="stakingToken" placeholder="" style="width: 150px;text-transform:uppercase" />
+        <input nz-input type="text" formControlName="stakingToken" placeholder="{{ i18n?.edit || 'ชื่อเหรียญที่จะฝาก' || 'Please input token name' }}" 
+        style="width: 150px;text-transform:uppercase" />
       </nz-form-control>
     </nz-form-item>
 
     <nz-form-item>
       <nz-form-label [nzSpan]="8" nzRequired>Amount</nz-form-label>
       <nz-form-control [nzSpan]="12" [nzErrorTip]="">
-          <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
-          formControlName="stakingAmount"></nz-input-number>
+          <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="{{ i18n?.edit || 'จำนวนเหรียญที่จะฝาก' || 'Please input token amount' }}" 
+          class="ct-w-100" formControlName="stakingAmount"></nz-input-number>
       </nz-form-control>
     </nz-form-item>
 
@@ -103,8 +122,8 @@
       <nz-form-label [nzSpan]="8" nzRequired>Staking Time</nz-form-label>
       <nz-form-control [nzSpan]="12" nzErrorTip="">
         <div class="ct-flex">
-          <nz-input-number [nzMin]="1" [nzStep]="1" [nzPrecision]="0" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
-          [nzMax]="maxStakeTime" formControlName="stakingTime"></nz-input-number>
+          <nz-input-number [nzMin]="1" [nzStep]="1" [nzPrecision]="0" nzPrecisionMode="cut" nzPlaceHolder="{{ i18n?.edit || 'ระยะเวลาฝาก (วัน)' || 'Please input stake time (days)' }}" 
+          class="ct-w-100" [nzMax]="maxStakeTime" formControlName="stakingTime"></nz-input-number>
           <div class="ct-after-input-box">{{ vForm.get('stakingTerm').value }}</div>
           <!-- <nz-radio-group formControlName="stakingTerm" nzButtonStyle="solid" nzSize="small" >
             <label nz-radio-button [nzValue]="'days'" class="ct-font-sm" [nzDisabled]="false">Days</label>
@@ -120,8 +139,8 @@
       <nz-form-control [nzSpan]="12" nzErrorTip="">
         <div>
           <div class="ct-flex">
-            <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="2" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
-            [nzMax]="maxInterestRate" formControlName="interestRate"></nz-input-number>
+            <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="2" nzPrecisionMode="cut" nzPlaceHolder="{{ i18n?.edit || 'ผลตอบแทน' || 'Please input token name' }}"
+            class="ct-w-100" [nzMax]="maxInterestRate" formControlName="interestRate"></nz-input-number>
             <div class="ct-after-input-box">{{ vForm.get('interestType').value }} %</div>
           </div>
           <nz-radio-group *ngIf="vForm.get('app').value == 'custom'" formControlName="interestType" nzButtonStyle="solid" nzSize="small" >
@@ -136,7 +155,7 @@
     <nz-form-item *ngIf="vForm.get('interestType').value !== 'apy'">
       <nz-form-label [nzSpan]="8">Compound</nz-form-label>
       <nz-form-control [nzSpan]="12" nzErrorTip="">
-        <nz-switch formControlName="compound"></nz-switch>
+        <nz-switch nzCheckedChildren="YES" nzUnCheckedChildren="NO" formControlName="compound"></nz-switch>
       </nz-form-control>
     </nz-form-item>
 
@@ -144,8 +163,8 @@
       <nz-form-label [nzSpan]="8" nzRequired>Compound Frequency</nz-form-label>
       <nz-form-control [nzSpan]="12" nzErrorTip="">
         <div class="ct-flex">
-          <nz-input-number [nzMin]="1" [nzStep]="1" [nzPrecision]="0" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
-          [nzMax]="maxCompoundFrequency" formControlName="compoundFrequency"></nz-input-number>
+          <nz-input-number [nzMin]="1" [nzStep]="1" [nzPrecision]="0" nzPrecisionMode="cut" nzPlaceHolder="{{ i18n?.edit || 'จำนวนครั้งที่ compound ต่อวัน' || 'Please input times fo compounding' }}" 
+          class="ct-w-100" [nzMax]="maxCompoundFrequency" formControlName="compoundFrequency"></nz-input-number>
           <div class="ct-after-input-box">per {{ vForm.get('stakingTerm').value }}</div>
         </div>
       </nz-form-control>
@@ -157,8 +176,8 @@
 
     <nz-form-item>
       <nz-form-label [nzSpan]="8" nzRequired>Token</nz-form-label>
-      <nz-form-control [nzSpan]="12" [nzErrorTip]="">
-        <input nz-input type="text" formControlName="earningToken" placeholder="" style="width: 150px;text-transform:uppercase" />
+      <nz-form-control [nzSpan]="12" [nzErrorTip]="" >
+        <input nz-input type="text" formControlName="earningToken" placeholder="{{ i18n?.edit || 'ชื่อเหรียญที่ได้รับ' || 'Please input earning token name' }}" style="width: 150px;text-transform:uppercase" />
       </nz-form-control>
     </nz-form-item>
 
@@ -168,26 +187,32 @@
         <ng-template #divOptionalTp><i nz-icon nzType="plus-circle" nzTheme="twotone"></i> OPTIONAL</ng-template>
       </nz-divider>
 
+      <ng-template #priceTooltipTp>
+        <p class="ct-font-sm">
+          <span>ถ้าระบุ ระบบจะนำราคาไปคำนวนให้ด้วย</span><br>
+        </p>
+      </ng-template>
+
       <nz-form-item>
-        <nz-form-label [nzSpan]="8">
+        <nz-form-label [nzSpan]="8" [nzTooltipTitle]="priceTooltipTp">
           <span class="ct-uppercase">{{ vForm.get('stakingToken').value }}</span>&nbsp;Price
         </nz-form-label>
-        <nz-form-control [nzSpan]="12" nzErrorTip="">
+        <nz-form-control [nzSpan]="12" nzErrorTip="" nzExtra="{{ i18n?.edit || 'ถ้าระบุ ระบบจะนำราคาไปคำนวนให้ด้วย' || '' }}">
           <div class="ct-flex">
-            <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
-            formControlName="stakingTokenPrice"></nz-input-number>
+            <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="{{ i18n?.edit || 'ราคาเหรียญ (หากทราบ)' || 'Please input token price' }}" 
+            class="ct-w-100" formControlName="stakingTokenPrice"></nz-input-number>
             <div class="ct-after-input-box">USD</div>
           </div>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item *ngIf="vForm.get('stakingToken').value !== vForm.get('earningToken').value">
-        <nz-form-label [nzSpan]="8">
+        <nz-form-label [nzSpan]="8" [nzTooltipTitle]="priceTooltipTp">
           <span class="ct-uppercase">{{ vForm.get('earningToken').value }}</span>&nbsp;Price
         </nz-form-label>
-        <nz-form-control [nzSpan]="12" nzErrorTip="">
+        <nz-form-control [nzSpan]="12" nzErrorTip="" nzExtra="{{ i18n?.edit || 'ถ้าระบุ ระบบจะนำราคาไปคำนวนให้ด้วย' || '' }}">
           <div class="ct-flex">
-            <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="" class="ct-w-100" 
+            <nz-input-number [nzMin]="0" [nzStep]="1" nzPrecisionMode="cut" nzPlaceHolder="{{ i18n?.edit || 'ราคาเหรียญ (หากทราบ)' || 'Please input token price' }}" class="ct-w-100" 
             formControlName="earningTokenPrice"></nz-input-number>
             <div class="ct-after-input-box">USD</div>
           </div>
@@ -200,8 +225,8 @@
 </ng-template>
 
 <ng-template #modalFooter>
-  <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-  <button nz-button nzType="primary" (click)="handleSave()">Save</button>
+  <button nz-button nzType="default" (click)="handleCancel()">{{ i18n?.edit || 'ยกเลิก' || 'Cancel' }}</button>
+  <button nz-button nzType="primary" (click)="handleSave()">{{ i18n?.edit || 'คำนวน' || 'Estimate' }}</button>
 </ng-template>
 
 <ng-template #devTimeline>
@@ -254,7 +279,7 @@
   <div><i nz-icon nzType="warning" nzTheme="twotone" [nzTwotoneColor]="'#e6b600'" ></i> ข้อควรระวังก่อนใช้งาน</div><br>
   <ul>
     <li>ทางเว็บไม่มีนโยบายในการขอ private key หรือ seed ถ้าพบว่าต้องกรอกข้อมูลดังกล่าว เป็นไปได้ว่าท่านกำลังอยู่ที่เว็บไซต์ปลอม กรุณาออกจากเว็บเพื่อป้องกันหลอกขโมยข้อมูล</li>
-    <li>ระบบนี้ไม่ใช่การแนะนำการลงทุน เป็นเพียงการจำลองผลลัพธ์เบื้องต้นเท่านั้น ซึ่งสถานการจริงตัวเลขอาจมีการเปลี่ยนแปลงตามเงื่อนไขและสภาพตลาด ขอสงวนสิทธิ์ความรับผิดชอบจากความเสียหายที่เกิดจากการนำไปใช้งานจริง</li>
+    <li>ระบบนี้ไม่ใช่การแนะนำการลงทุน เป็นเพียงการประเมินผลตอบแทนเบื้องต้นเท่านั้น ซึ่งสถานการจริงตัวเลขอาจมีการเปลี่ยนแปลงตามเงื่อนไขและสภาพตลาด ขอสงวนสิทธิ์ไม่รับผิดชอบความเสียหายจากการนำไปใช้งานจริง</li>
   </ul>
 </nz-modal>
       
@@ -306,60 +331,137 @@
         <div
           class="inner-content"
           nz-col
-          nzXs="2"
-          nzSm="4"
-          nzMd="6"
-          nzLg="8"
-          nzXl="10"
+          nzXs="12"
+          nzSm="12"
+          nzMd="24"
+          nzLg="24"
+          nzXl="24"
         >
+          <div>  
+            <div class="ct-txt-header">
+              Estimate Your <span style="color: #1cc7d3">Profit</span><br>
+              <span class="ct-txt-header-sub">By Defi Farm Tips Simulator</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="inner-content"
+          nz-col
+          nzXs="12"
+          nzSm="12"
+          nzMd="24"
+          nzLg="24"
+          nzXl="24"
+        >
+
           <div class="ct-pcs-card">
 
             <div class="ct-pcs-header">
-              <div class="ct-pcs-header-content">
-                <div class="ct-pcs-header-content-main">Header</div>
-                <div class="ct-pcs-header-content-sub">Sub-Header</div>
+              <div *ngIf="currentInfo?.farmName" class="ct-pcs-header-content">
+                <div class="ct-pcs-header-content-main">{{ currentInfo.farmName }}</div>
+                <div class="ct-pcs-header-content-sub">Earn {{ currentInfo.earningToken | uppercase }}, stake {{ currentInfo.stakingToken | uppercase }}</div>
+              </div>
+              <div *ngIf="!(currentInfo?.farmName)" class="ct-pcs-header-content">
+                <div class="ct-pcs-header-content-main">Earn {{ currentInfo.earningToken | uppercase }}</div>
+                <div class="ct-pcs-header-content-sub">Stake {{ currentInfo.stakingToken | uppercase }}</div>
               </div>
               <div class="ct-pcs-header-icon">
-                <img *ngIf="currentInfo?.farmInfo?.imgLink" src="https://pancakeswap.finance/images/pools/cake-cake.svg" alt="CAKE"/>
+                <img *ngIf="currentInfo?.farmInfo?.imgLink" src="{{ currentInfo.farmInfo.imgLink }}" alt="currentInfo.earningToken"/>
                 <nz-avatar-group *ngIf="!(currentInfo?.farmInfo?.imgLink)">
-                  <nz-avatar [nzSize]="'large'" class="ct-uppercase" style="background-color: #1fc7d4" nz-tooltip nzText="safemoon"></nz-avatar>
-                  <nz-avatar [nzSize]="'large'" class="ct-uppercase" style="background-color: #ed4b9e" nz-tooltip nzText="CAKE"></nz-avatar>
+                  <nz-avatar [nzSize]="'large'" class="ct-uppercase" style="background-color: #1fc7d4" nz-tooltip nzText="{{ currentInfo.stakingToken }}"></nz-avatar>
+                  <nz-avatar [nzSize]="'large'" class="ct-uppercase" style="background-color: #ed4b9e" nz-tooltip nzText="{{ currentInfo.earningToken }}"></nz-avatar>
                 </nz-avatar-group>
               </div>
             </div>
 
             <div class="ct-pcs-content">
-              <ng-container *ngTemplateOutlet="labelvalue;context:{ $implicit: 'APR', amount: '8888888.88', hasIcon: true }">
+              <ng-container *ngTemplateOutlet="labelvalue;context:{ 
+                $implicit: currentInfo.interestType, 
+                amount: currentInfo.interestRate, 
+                hasIcon: true }"
+              >
               </ng-container>
 
-              <div class="ct-mt-lg">
-                <ng-container *ngTemplateOutlet="detail;context:{ $implicit: 'CAKE', subKeyword: 'EARN', total: '9999999.99', subTotal: 'xxxxxxxxx' }">
+              <div class="ct-mt-lg ct-uppercase">
+                <ng-container *ngTemplateOutlet="detailEarn;context:{ 
+                  $implicit: currentInfo.earningToken, 
+                  beforeKeyword: currentInfo.stakingTime,
+                  subKeyword: 'EARNED', 
+                  total: currentInfo.extraInfo?currentInfo.extraInfo.earnActual:null, 
+                  subTotal: currentInfo.earningTokenPrice }"
+                >
                 </ng-container>
               </div>
 
-              <div class="ct-mt-lg">
-                <ng-container *ngTemplateOutlet="detail;context:{ $implicit: 'CAKE', subKeyword: 'EARN', total: '9999999.99', subTotal: 'xxxxxxxxx' }">
+              <div class="ct-mt-lg ct-uppercase">
+                <ng-container *ngTemplateOutlet="detailStake;context:{ 
+                  $implicit: currentInfo.stakingToken, 
+                  subKeyword: 'STAKE', 
+                  total: currentInfo.stakingAmount, 
+                  subTotal: currentInfo.stakingTokenPrice }"
+                >
                 </ng-container>
+              </div>
+
+              <ng-container *ngIf="currentInfo.extraInfo">
+
+                <nz-divider nzDashed [nzText]="divSuggestionTp" style="color: #9a9a9a;">
+                  <ng-template #divSuggestionTp><i nz-icon nzType="bulb" nzTheme="outline"></i> SUGGESTION</ng-template>
+                </nz-divider>
+  
+                <div *ngFor="let time of earningTerms" class="ct-mt-lg ct-uppercase">
+                  <ng-container *ngTemplateOutlet="detailEarn;context:{ 
+                    $implicit: currentInfo.earningToken, 
+                    beforeKeyword: time.value,
+                    subKeyword: 'EARNED', 
+                    total: currentInfo.extraInfo?currentInfo.extraInfo[time.key]:null, 
+                    subTotal: currentInfo.earningTokenPrice }"
+                  >
+                  </ng-container>
+                </div>
+
+              </ng-container>
+
+              <div class="ct-mt-lg">
+                <button class="ct-bg-green ct-pcs-button ct-w-100" (click)="handleEdit(modalHeader, modalContent, modalFooter);">
+                  {{ i18n?.edit || 'ตั้งค่าการคำนวนใหม่' || 'Edit' }}
+                </button>
               </div>
               
             </div>
 
             <div class="ct-pcs-footer">
               <div class="ct-pcs-footer-left">
-                <div class="ct-pcs-compound-type-info">
+                <div *ngIf="currentInfo.interestType == 'apr'" class="ct-pcs-compound-type-info-purple ct-w-100">
                   <ng-container *ngTemplateOutlet="svg_18">
                   </ng-container>
-                  <span>Manual</span>
+                  <div class="ct-w-100">{{ i18n?.edit || 'Manual' }}</div>
                 </div>
-                &nbsp;
-                <div class="ct-m-xs">
+                <div *ngIf="currentInfo.interestType == 'apy'" class="ct-pcs-compound-type-info-green">
+                  <ng-container *ngTemplateOutlet="svg_18">
+                  </ng-container>
+                  <div class="ct-w-100">{{ i18n?.edit || 'Auto' }}</div>
+                </div>
+                <!-- <div class="ct-m-xs">
                   <ng-container *ngTemplateOutlet="svg_19">
                   </ng-container>
+                </div> -->
+              </div>
+              &nbsp;
+              <div class="ct-pcs-footer-left ct-w-100">
+                <div *ngIf="currentInfo.interestType == 'apy' || currentInfo.compound" class="ct-pcs-compound-type-info-green ct-w-100">
+                  <div class="ct-font-sm">{{ i18n?.edit || 'Compound per day' }}<br>{{ ( currentInfo.compoundFrequency || 0) | number:'0.0' }}</div>
+                </div>
+                <div *ngIf="currentInfo.interestType == 'apr' && !currentInfo.compound" class="ct-pcs-compound-type-info-purple ct-w-100">
+                  <div class="ct-font-sm">{{ i18n?.edit || 'No Compound' }}</div>
                 </div>
               </div>
-              <div class="ct-pcs-footer-right">
-                <!-- <button class="ct-bg-green ct-pcs-button" (click)="handleEdit(modalHeader, modalContent, modalFooter);" >{{ i18n?.edit || 'Edit' }}</button> -->
-              </div>
+              <!-- <div class="ct-pcs-footer-right">
+                <span class="" *ngIf="currentInfo.interestType == 'apr' && currentInfo.compound">{{ i18n?.edit || 'Compound' }}: {{ currentInfo.compound?'YES':'NO' }}</span>
+                <span class="" *ngIf="currentInfo.interestType == 'apy' || currentInfo.compound">{{ i18n?.edit || 'Freq(per day)' }}: {{ currentInfo.compoundFrequency || 0 }}</span>
+                <span class="" *ngIf="currentInfo.interestType == 'apy' || currentInfo.compound">{{ i18n?.edit || 'Freq(per day)' }}: {{ currentInfo.compoundFrequency || 0 }}</span>
+              </div> -->
             </div>
 
           </div>
@@ -373,11 +475,8 @@
             nzAlign="center"
             [nzSize]="8"
           >
-            <button nz-col *nzSpaceItem class="ct-bg-green ct-pcs-button ct-font-md" (click)="handleEdit(modalHeader, modalContent, modalFooter);">
-              {{ i18n?.edit || 'Edit' }}
-            </button>
             <button nz-col *nzSpaceItem class="ct-bg-red ct-pcs-button ct-font-md" (click)="handleSaveAndShare()">
-              Save & Share
+              {{ i18n?.edit || 'Save & Share' }}
             </button>
             <!-- <button nz-col *nzSpaceItem class="ct-bg-green ct-pcs-button">
               Collect
@@ -403,7 +502,7 @@
         <nz-divider nzDashed [nzText]="ftSocialTp" class="ct-fttp-section">
           <ng-template #ftSocialTp><i nz-icon nzType="like" nzTheme="outline"></i> Social</ng-template>
         </nz-divider>
-        <i class="ct-fas fab fa-facebook-square"></i> แนะนำบทความ เครื่องมือ รีวิวfarm pool เทคนิคการทำ Yield Farming
+        <i class="ct-fas fab fa-facebook-square"></i> แนะนำบทความ เครื่องมือ รีวิวfarm pool เทคนิคการทำ Yield Farming <a href="https://www.facebook.com/defifarmtips">https://www.facebook.com/defifarmtips</a>
         <div>
           <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fdefifarmtips%2F&tabs&width=270&height=70&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=true&appId" width="270" height="70" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
         </div>
@@ -415,7 +514,7 @@
         พูดคุยแลกสอบถามการทำฟาร์มบน Pancakeswap และ Pancakebunny<br>
         🥞🐰กลุ่ม Pancakeswap & Bunny Thailand<br>
         <i class="ct-fas fab fa-telegram"></i> Telegram : <a href="https://t.me/pcsbunnythailand">https://t.me/pcsbunnythailand</a><br>
-        <i class="ct-fas fab fa-facebook-square"></i> Facebook: <a href="https://www.facebook.com/groups/190215806253798/">https://www.facebook.com/groups/190215806253798/</a><br>
+        <i class="ct-fas fab fa-facebook-square"></i> Facebook: <a href="https://www.facebook.com/groups/190215806253798">https://www.facebook.com/groups/190215806253798</a><br>
       </div>
       <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
         <nz-divider nzDashed [nzText]="ftNotificationTp" class="ct-fttp-section">
@@ -423,7 +522,7 @@
         </nz-divider>
         <ul>
           <li>ทางเว็บไม่มีนโยบายในการขอ private key หรือ seed ถ้าพบว่าต้องกรอกข้อมูลดังกล่าว เป็นไปได้ว่าท่านกำลังอยู่ที่เว็บไซต์ปลอม กรุณาออกจากเว็บเพื่อป้องกันหลอกขโมยข้อมูล</li>
-          <li>ระบบนี้ไม่ใช่การแนะนำการลงทุน เป็นเพียงการจำลองผลลัพธ์เบื้องต้นเท่านั้น ซึ่งสถานการจริงตัวเลขอาจมีการเปลี่ยนแปลงตามเงื่อนไขและสภาพตลาด ขอสงวนสิทธิ์ความรับผิดชอบจากความเสียหายที่เกิดจากการนำไปใช้งานจริง</li>
+          <li>ระบบนี้ไม่ใช่การแนะนำการลงทุน เป็นเพียงการประเมินผลตอบแทนเบื้องต้นเท่านั้น ซึ่งสถานการจริงตัวเลขอาจมีการเปลี่ยนแปลงตามเงื่อนไขและสภาพตลาด ขอสงวนสิทธิ์ไม่รับผิดชอบความเสียหายจากการนำไปใช้งานจริง</li>
         </ul>
         <nz-divider nzDashed [nzText]="ftContactTp" class="ct-fttp-section">
           <ng-template #ftContactTp><i nz-icon nzType="mail" nzTheme="outline"></i> Contact</ng-template>

@@ -8,7 +8,6 @@ import { Observable, Observer } from "rxjs";
 import apps from '../assets/apps.json';
 import farms from '../assets/farms.json';
 
-
 @Component({
   selector: "taang-app",
   templateUrl: './app.component.html',
@@ -28,21 +27,44 @@ import farms from '../assets/farms.json';
         width: 25px;
       }
 
-      .ct-pcs-compound-type-info {
+      .ct-pcs-compound-type-info-purple{
         align-items: center;
         color: #7645d9;
         display: flex;
-        height: 28px;
         width: 90.8125px;
         border: 2px solid #7645d9;
         border-radius: 16px;
         font: 14px / 14px Kanit, sans-serif;
         padding: 0px 8px;
+        text-align: center;
+        justify-content: center;
       }
+
+      .ct-pcs-compound-type-info-purple svg{
+        fill: #7645d9;
+      }
+
+      .ct-pcs-compound-type-info-green{
+        align-items: center;
+        color: #31d0aa;
+        display: flex;
+        width: 90.8125px;
+        border: 2px solid #31d0aa;
+        border-radius: 16px;
+        font: 14px / 14px Kanit, sans-serif;
+        padding: 0px 8px;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .ct-pcs-compound-type-info-green svg{
+        fill: #31d0aa;
+      }
+
+
 
       .ct-pcs-footer-left{
         display: flex;
-        padding-top: 10px;
       }
 
       .ct-pcs-button {
@@ -91,7 +113,7 @@ import farms from '../assets/farms.json';
 
       .ct-pcs-header-content-sub {
         color: #8f80ba;
-        font: 16px / 24px Kanit, sans-serif;
+        font: 15px / 24px Kanit, sans-serif;
       }
 
       .ct-pcs-header-icon {
@@ -106,7 +128,7 @@ import farms from '../assets/farms.json';
       }
 
       .ct-pcs-content {
-        height: 254px;
+        min-height: 234px;
         font: 16px / 16px Kanit, sans-serif;
         padding: 24px;
       }      
@@ -158,6 +180,17 @@ import farms from '../assets/farms.json';
         font: 16px / 16px Kanit, sans-serif;
         padding: 24px;
         display: flex;
+      }
+
+      .ct-pcs-footer-right {
+        color: #452a7a;
+        font: 600 12px / 22px Kanit, sans-serif;
+      }
+
+      .ct-pcs-footer-right span {
+        /* display: inline-block;
+  vertical-align: middle; */
+  text-align: center
       }
 
 
@@ -222,6 +255,10 @@ import farms from '../assets/farms.json';
         padding: 20px;
       }
 
+      .ct-p-sm {
+        padding: 5px;
+      }
+
       .ct-m-xs {
         margin: 3px;
       }
@@ -243,7 +280,7 @@ import farms from '../assets/farms.json';
       }
 
       .ct-font-sm {
-        font-size: 10px;
+        font-size: 12px;
       }
 
       .ct-font-md {
@@ -310,6 +347,19 @@ import farms from '../assets/farms.json';
       .ct-fttp-section {
         color: gray;
       }
+
+      .ct-txt-header {
+        color: #ed4b9e;
+        font: 900 40px / 18px Poppins, sans-serif;
+        line-height: 1;
+        padding: 30px 10px;
+      }
+
+      .ct-txt-header-sub {
+        color: #452a7a;
+        font: italic 14px / 18px Kanit, sans-serif;
+        line-height: normal;
+      }
   `
   ]
 })
@@ -323,8 +373,14 @@ export class NzDemoLayoutTopComponent {
   screenControl = {
     openMenu: false,
   }
-  currentInfo:any = {}
+  currentInfo
   isVisibleTopWarning = true
+  earningTerms = [
+    { key: 'earn1d', value: 1 },
+    { key: 'earn7d', value: 7 },
+    { key: 'earn30d', value: 30 },
+    { key: 'earn1y', value: 365 }
+  ]
 
   //Control param
   maxStakeTime: number = 365 * 10
@@ -349,8 +405,9 @@ export class NzDemoLayoutTopComponent {
     this.vForm = this.fb.group({
       app: [null, [Validators.required]],
       appInfo: [null],
-      farm: [null, [Validators.required]],
+      farm: [null],
       farmInfo: [null],
+      farmName: [null],
       stakingAmount: [null, [Validators.required]],
       stakingToken: [null, [Validators.required]],
       stakingTokenPrice: [null],
@@ -395,11 +452,13 @@ export class NzDemoLayoutTopComponent {
 
     this.vForm.controls.farm.valueChanges.subscribe((farm)=>{
       if(this.farms[0].app == 'custom') {
+        this.vForm.controls.farmName.setValue(null)
         return
       }
 
       const farmInfo = this.findFarmInfoByKey(farm)
       this.vForm.controls.farmInfo.setValue(farmInfo)
+      this.vForm.controls.farmName.setValue(farmInfo.farmName)
 
       //Assign relate
       if(farmInfo){
@@ -507,7 +566,7 @@ export class NzDemoLayoutTopComponent {
     this.vForm.markAsPristine()
     this.vForm.markAsUntouched()
     this.vForm.updateValueAndValidity()
-    delete this.currentInfo.earnInfo
+    delete this.currentInfo.extraInfo
     this.vForm.setValue(this.currentInfo)
     this.confirmModal.close()
   }
@@ -548,6 +607,10 @@ export class NzDemoLayoutTopComponent {
 
       this.currentInfo = { ... this.vForm.getRawValue() }
 
+      if(this.currentInfo.app == 'custom' && this.currentInfo.farm) {
+        this.currentInfo.farmName = this.currentInfo.farm
+      }
+
       //Calculate section
       const stakingTime = this.currentInfo.stakingTime
       let mode
@@ -556,29 +619,39 @@ export class NzDemoLayoutTopComponent {
         const apy = this.currentInfo.interestRate //%
         const aprPerYear = this.apyToApr(apy)
         const aprPerDay = this.aprPerDay(aprPerYear)
-        this.currentInfo['earnInfo.earnActual'] = this.calculateCompound(aprPerDay, stakingTime, this.currentInfo)
-        this.currentInfo['earnInfo.earn1d'] = this.calculateCompound(aprPerDay, 1, this.currentInfo)
-        this.currentInfo['earnInfo.earn7d'] = this.calculateCompound(aprPerDay, 7, this.currentInfo)
-        this.currentInfo['earnInfo.earn30d'] = this.calculateCompound(aprPerDay, 30, this.currentInfo)
-        this.currentInfo['earnInfo.earn1y'] = this.calculateCompound(aprPerDay, 365, this.currentInfo)
+
+        this.currentInfo.extraInfo = {
+          earnActual: this.calculateCompound(aprPerDay, stakingTime, this.currentInfo),
+          earn1d: this.calculateCompound(aprPerDay, 1, this.currentInfo),
+          earn7d: this.calculateCompound(aprPerDay, 7, this.currentInfo),
+          earn30d: this.calculateCompound(aprPerDay, 30, this.currentInfo),
+          earn1y: this.calculateCompound(aprPerDay, 365, this.currentInfo)
+        }
         console.log('mode', mode, 'apy', apy, 'aprPerDay', aprPerDay, 'currentInfo', this.currentInfo )
       }else{
         const apr = this.currentInfo.interestRate //%
         const aprPerDay = this.aprPerDay(apr)
+        let mode
         if(this.currentInfo.compound){
-          let mode = 'manual-compound'
-          this.currentInfo['earnInfo.earnActual'] = this.calculateCompound(aprPerDay, stakingTime, this.currentInfo)
-          this.currentInfo['earnInfo.earn1d'] = this.calculateCompound(aprPerDay, 1, this.currentInfo)
-          this.currentInfo['earnInfo.earn7d'] = this.calculateCompound(aprPerDay, 7, this.currentInfo)
-          this.currentInfo['earnInfo.earn30d'] = this.calculateCompound(aprPerDay, 30, this.currentInfo)
-          this.currentInfo['earnInfo.earn1y'] = this.calculateCompound(aprPerDay, 365, this.currentInfo)
+          mode = 'manual-compound'
+
+          this.currentInfo.extraInfo = {
+            earnActual: this.calculateCompound(aprPerDay, stakingTime, this.currentInfo),
+            earn1d: this.calculateCompound(aprPerDay, 1, this.currentInfo),
+            earn7d: this.calculateCompound(aprPerDay, 7, this.currentInfo),
+            earn30d: this.calculateCompound(aprPerDay, 30, this.currentInfo),
+            earn1y: this.calculateCompound(aprPerDay, 365, this.currentInfo)
+          }
         }else{
-          let mode = 'manual'
-          this.currentInfo['earnInfo.earnActual'] = this.calculateManual(aprPerDay, stakingTime, this.currentInfo)
-          this.currentInfo['earnInfo.earn1d'] = this.calculateManual(aprPerDay, 1, this.currentInfo)
-          this.currentInfo['earnInfo.earn7d'] = this.calculateManual(aprPerDay, 7, this.currentInfo)
-          this.currentInfo['earnInfo.earn30d'] = this.calculateManual(aprPerDay, 30, this.currentInfo)
-          this.currentInfo['earnInfo.earn1y'] = this.calculateManual(aprPerDay, 365, this.currentInfo)
+          mode = 'manual'
+
+          this.currentInfo.extraInfo = {
+            earnActual: this.calculateManual(aprPerDay, stakingTime, this.currentInfo),
+            earn1d: this.calculateManual(aprPerDay, 1, this.currentInfo),
+            earn7d: this.calculateManual(aprPerDay, 7, this.currentInfo),
+            earn30d: this.calculateManual(aprPerDay, 30, this.currentInfo),
+            earn1y: this.calculateManual(aprPerDay, 365, this.currentInfo)
+          }
         }
         console.log('mode', mode, 'apr', apr, 'aprPerDay', aprPerDay, 'currentInfo', this.currentInfo )
       }
@@ -593,11 +666,19 @@ export class NzDemoLayoutTopComponent {
   }
 
   handleSaveAndShare(): void {
-    this.notification.create(
-      "info",
-      "Sorry, this feature isn't available right now",
-      'We\'ll inform you later in <a target="_blank" href="https://www.facebook.com/defifarmtips/"><i class="ct-fas fab fa-facebook-square"></i> Defi Farm Tips Official Pages</a>'
-    );
+    if(this.i18n){
+      this.notification.create(
+        "info",
+        "Sorry, this feature isn't available right now",
+        'We\'ll inform you later in <a target="_blank" href="https://www.facebook.com/defifarmtips/"><i class="ct-fas fab fa-facebook-square"></i> Defi Farm Tips Official Pages</a>'
+      );
+    }else{
+      this.notification.create(
+        "info",
+        "ขออภัย, feature นี้ยังไม่พร้อมใช้งานในขณะนี้",
+        'สามารถติดตามประกาศupdateได้ที่ <a target="_blank" href="https://www.facebook.com/defifarmtips/"><i class="ct-fas fab fa-facebook-square"></i> Defi Farm Tips Official Pages</a>'
+      );
+    }
   }
 
   openDrawer() {

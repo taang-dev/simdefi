@@ -25,7 +25,7 @@
     "interestType": "apy",
     "compound": false,
     "remark": null,
-    "imgLink": ""
+    "imgLink": "https://pancakeswap.finance/images/pools/cake-cakevault.svg"
   },
   {
     "app": "pancake",
@@ -39,7 +39,7 @@
     "interestType": "apr",
     "compound": false,
     "remark": null,
-    "imgLink": ""
+    "imgLink": "https://pancakeswap.finance/images/pools/cake-cake.svg"
   },
   {
     "app": "pancake",
@@ -53,6 +53,6 @@
     "interestType": "apr",
     "compound": false,
     "remark": null,
-    "imgLink": ""
+    "imgLink": "https://pancakeswap.finance/images/pools/bunny-cake.svg"
   }
 ]
