@@ -3,10 +3,10 @@
 Profit calculation simulation system for you to compare, analyze before investing in the defi farming
 
 ## Tech
-Angular
+Angular11, NG-ZORROW, Firebase
 
 ## Installation
 npm i
 
 # Live Demo
-[a link](https://defi.taang.dev)
+[https://defi.taang.dev](https://defi.taang.dev)
