@@ -468,16 +468,6 @@ export class NzDemoLayoutTopComponent {
       }
     })
 
-    // this.vForm.controls.stakingTerm.valueChanges.subscribe((value)=>{
-    //   if(value == 'days'){
-    //     this.maxStakeTime = this.maxStakeTimeYear * 365
-    //   }else if(value == 'months'){
-    //     this.maxStakeTime = this.maxStakeTimeYear * 12
-    //   }else if(value == 'years'){
-    //     this.maxStakeTime = this.maxStakeTimeYear
-    //   }
-    // })
-
     this.appList = apps
     this.farmList = farms
   }

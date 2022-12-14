@@ -1,6 +1,6 @@
 <!-- Template -->
 
-<ng-template #labelvalue let-type let-totalAmount="amount" let-icon="hasIcon">
+<ng-template #labelvaluePercent let-type let-totalAmount="amount" let-icon="hasIcon">
   <div class="ct-pcs-content-labelvalue">
       <div class="ct-pcs-content-labelvalue-type ct-uppercase">{{ type }}:</div>
       <div></div>
@@ -10,6 +10,20 @@
           </ng-container>
         </span>
         <span>{{ (totalAmount || 0) | number: '0.0-2' }}%</span>
+      </div>
+  </div>
+</ng-template>
+
+<ng-template #labelvaluePerDay let-type let-totalAmount="amount" let-icon="hasIcon">
+  <div class="ct-pcs-content-labelvalue">
+      <div style="line-height: 1.5" class="ct-pcs-content-labelvalue-type ct-uppercase ct-w-100">{{ type }}:</div>
+      <div></div>
+      <div class="ct-pcs-content-labelvalue-amount">
+        <span *ngIf="icon">
+          <ng-container *ngTemplateOutlet="svg_17">
+          </ng-container>
+        </span>
+        <span>{{ (totalAmount || 0) | number: '0.0' }} ครั้ง</span>
       </div>
   </div>
 </ng-template>
@@ -376,30 +390,40 @@
             </div>
 
             <div class="ct-pcs-content">
-              <ng-container *ngTemplateOutlet="labelvalue;context:{ 
+              <ng-container *ngTemplateOutlet="labelvaluePercent;context:{ 
                 $implicit: currentInfo.interestType, 
                 amount: currentInfo.interestRate, 
                 hasIcon: true }"
               >
               </ng-container>
 
+              <ng-container *ngIf="currentInfo.interestType == 'apy' || currentInfo.compound">
+                <br>
+                <ng-container *ngTemplateOutlet="labelvaluePerDay;context:{ 
+                  $implicit: 'ทบต่อวัน', 
+                  amount: currentInfo.compoundFrequency, 
+                  hasIcon: false }"
+                >
+                </ng-container>
+              </ng-container>
+
               <div class="ct-mt-lg ct-uppercase">
-                <ng-container *ngTemplateOutlet="detailEarn;context:{ 
-                  $implicit: currentInfo.earningToken, 
-                  beforeKeyword: currentInfo.stakingTime,
-                  subKeyword: 'EARNED', 
-                  total: currentInfo.extraInfo?currentInfo.extraInfo.earnActual:null, 
-                  subTotal: currentInfo.earningTokenPrice }"
+                <ng-container *ngTemplateOutlet="detailStake;context:{ 
+                  $implicit: currentInfo.stakingToken, 
+                  subKeyword: !(i18n)?'ฝาก':'STAKE', 
+                  total: currentInfo.stakingAmount, 
+                  subTotal: currentInfo.stakingTokenPrice }"
                 >
                 </ng-container>
               </div>
 
               <div class="ct-mt-lg ct-uppercase">
-                <ng-container *ngTemplateOutlet="detailStake;context:{ 
-                  $implicit: currentInfo.stakingToken, 
-                  subKeyword: 'STAKE', 
-                  total: currentInfo.stakingAmount, 
-                  subTotal: currentInfo.stakingTokenPrice }"
+                <ng-container *ngTemplateOutlet="detailEarn;context:{ 
+                  $implicit: currentInfo.earningToken, 
+                  beforeKeyword: currentInfo.stakingTime,
+                  subKeyword: !(i18n)?'ที่ได้':'EARNED', 
+                  total: currentInfo.extraInfo?currentInfo.extraInfo.earnActual:null, 
+                  subTotal: currentInfo.earningTokenPrice }"
                 >
                 </ng-container>
               </div>
@@ -414,7 +438,7 @@
                   <ng-container *ngTemplateOutlet="detailEarn;context:{ 
                     $implicit: currentInfo.earningToken, 
                     beforeKeyword: time.value,
-                    subKeyword: 'EARNED', 
+                    subKeyword: !(i18n)?'ที่ได้':'EARNED', 
                     total: currentInfo.extraInfo?currentInfo.extraInfo[time.key]:null, 
                     subTotal: currentInfo.earningTokenPrice }"
                   >
@@ -443,10 +467,6 @@
                   </ng-container>
                   <div class="ct-w-100">{{ i18n?.edit || 'Auto' }}</div>
                 </div>
-                <!-- <div class="ct-m-xs">
-                  <ng-container *ngTemplateOutlet="svg_19">
-                  </ng-container>
-                </div> -->
               </div>
               &nbsp;
               <div class="ct-pcs-footer-left ct-w-100">
@@ -457,11 +477,6 @@
                   <div class="ct-font-sm">{{ i18n?.edit || 'No Compound' }}</div>
                 </div>
               </div>
-              <!-- <div class="ct-pcs-footer-right">
-                <span class="" *ngIf="currentInfo.interestType == 'apr' && currentInfo.compound">{{ i18n?.edit || 'Compound' }}: {{ currentInfo.compound?'YES':'NO' }}</span>
-                <span class="" *ngIf="currentInfo.interestType == 'apy' || currentInfo.compound">{{ i18n?.edit || 'Freq(per day)' }}: {{ currentInfo.compoundFrequency || 0 }}</span>
-                <span class="" *ngIf="currentInfo.interestType == 'apy' || currentInfo.compound">{{ i18n?.edit || 'Freq(per day)' }}: {{ currentInfo.compoundFrequency || 0 }}</span>
-              </div> -->
             </div>
 
           </div>
@@ -496,49 +511,4 @@
       </div>
     </div>
   </nz-content>
-  <nz-footer class="ct-footer" >
-    <div nz-row class="ct-footer-main">
-      <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
-        <nz-divider nzDashed [nzText]="ftSocialTp" class="ct-fttp-section">
-          <ng-template #ftSocialTp><i nz-icon nzType="like" nzTheme="outline"></i> Social</ng-template>
-        </nz-divider>
-        <i class="ct-fas fab fa-facebook-square"></i> แนะนำบทความ เครื่องมือ รีวิวfarm pool เทคนิคการทำ Yield Farming <a href="https://www.facebook.com/defifarmtips">https://www.facebook.com/defifarmtips</a>
-        <div>
-          <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fdefifarmtips%2F&tabs&width=270&height=70&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=true&appId" width="270" height="70" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-        </div>
-        <br>
-        พูดคุยแลกเปลี่ยนข่าวสารDEFI การทำฟาร์มต่างๆ<br>
-        กลุ่ม DEFI Farm Tips<br>
-        <i class="ct-fas fab fa-line"></i> Line open chat: <a href="https://line.me/ti/g2/y0J5cY_F14ZI_3Pl8p7QNQ">https://line.me/ti/g2/y0J5cY_F14ZI_3Pl8p7QNQ</a><br><br>
-        
-        พูดคุยแลกสอบถามการทำฟาร์มบน Pancakeswap และ Pancakebunny<br>
-        🥞🐰กลุ่ม Pancakeswap & Bunny Thailand<br>
-        <i class="ct-fas fab fa-telegram"></i> Telegram : <a href="https://t.me/pcsbunnythailand">https://t.me/pcsbunnythailand</a><br>
-        <i class="ct-fas fab fa-facebook-square"></i> Facebook: <a href="https://www.facebook.com/groups/190215806253798">https://www.facebook.com/groups/190215806253798</a><br>
-      </div>
-      <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
-        <nz-divider nzDashed [nzText]="ftNotificationTp" class="ct-fttp-section">
-          <ng-template #ftNotificationTp><i nz-icon nzType="notification" nzTheme="outline"></i> Notification</ng-template>
-        </nz-divider>
-        <ul>
-          <li>ทางเว็บไม่มีนโยบายในการขอ private key หรือ seed ถ้าพบว่าต้องกรอกข้อมูลดังกล่าว เป็นไปได้ว่าท่านกำลังอยู่ที่เว็บไซต์ปลอม กรุณาออกจากเว็บเพื่อป้องกันหลอกขโมยข้อมูล</li>
-          <li>ระบบนี้ไม่ใช่การแนะนำการลงทุน เป็นเพียงการประเมินผลตอบแทนเบื้องต้นเท่านั้น ซึ่งสถานการจริงตัวเลขอาจมีการเปลี่ยนแปลงตามเงื่อนไขและสภาพตลาด ขอสงวนสิทธิ์ไม่รับผิดชอบความเสียหายจากการนำไปใช้งานจริง</li>
-        </ul>
-        <nz-divider nzDashed [nzText]="ftContactTp" class="ct-fttp-section">
-          <ng-template #ftContactTp><i nz-icon nzType="mail" nzTheme="outline"></i> Contact</ng-template>
-        </nz-divider>
-        <p>
-          ต้องการพูดคุยสอบถาม แนะนำติชม หรือสนับสนุนนักพัฒนา สามารถติดต่อได้ที่  
-          <span><i class="ct-fas fas fa-envelope-square"></i><a href="mailto:admin@taang.dev"> admin@taang.dev</a></span>
-        </p>
-        <nz-divider nzDashed [nzText]="ftVersionTp" class="ct-fttp-section">
-          <ng-template #ftVersionTp><i nz-icon nzType="build" nzTheme="outline"></i> Version</ng-template>
-        </nz-divider>
-        <p>
-          version 1.0.0 11/05/2021
-        </p>
-      </div>
-    </div>
-    <div class="ct-footer-sub">Defi Farm Tips Simulator©2021 By taang.dev</div>
-  </nz-footer>
 </nz-layout>
